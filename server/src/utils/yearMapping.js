@@ -1,0 +1,16 @@
+export const yearMap = {
+  GRADE_7: "7th grade",
+  GRADE_8: "8th grade",
+  GRADE_9: "9th grade",
+  GRADE_10: "10th grade",
+  GRADE_11: "11th grade",
+  GRADE_12: "12th grade",
+  BACHELOR_FIRST: "Bachelors - 1st year",
+  BACHELOR_SECOND: "Bachelors - 2nd year",
+  BACHELOR_THIRD: "Bachelors - 3rd year",
+  BACHELOR_FOURTH: "Bachelors - 4th year",
+  BACHELOR_FIFTH: "Bachelors - 5th year",
+  MASTER_FIRST: "Masters - 1st year",
+  MASTER_SECOND: "Masters - 2nd year",
+  MASTER_THIRD: "Masters - 3rd year",
+};

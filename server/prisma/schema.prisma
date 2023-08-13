@@ -1,0 +1,165 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model city {
+  id                       String                      @id @default(uuid())
+  name                     String
+  state_id                 String
+  state                    state                       @relation(fields: [state_id], references: [id])
+  institutes               institute[]
+}
+
+model friend_request {
+  friend_request_by_id     String
+  friend_request_by        user                        @relation("friend_request_by", fields: [friend_request_by_id], references: [id], onDelete: Cascade)
+  friend_request_to_id     String
+  friend_request_to        user                        @relation("friend_request_to", fields: [friend_request_to_id], references: [id], onDelete: Cascade)
+  created_at               DateTime                    @default(now())
+  @@id([friend_request_by_id, friend_request_to_id])
+}
+
+model friends {
+  friend_who_added_id      String
+  friend_who_added         user                        @relation("friend_who_added", fields: [friend_who_added_id], references: [id], onDelete: Cascade)
+  friend_who_accepted_id   String
+  friend_who_accepted      user                        @relation("friend_who_accepted", fields: [friend_who_accepted_id], references: [id], onDelete: Cascade)
+  created_at               DateTime                    @default(now())
+  updated_at               DateTime?                   @updatedAt
+
+  @@id([friend_who_added_id, friend_who_accepted_id])
+}
+
+model institute {
+  id                       String                      @id @default(uuid())
+  name                     String
+  city_id                  String?
+  city                     city?                       @relation(fields: [city_id], references: [id])
+  state_id                 String
+  state                    state                       @relation(fields: [state_id], references: [id])
+  type                     institute_type
+  requested_by_user        Boolean?
+  students                 user[]
+}
+
+model poll {
+  id                       String                      @id
+  user                     user                        @relation(fields: [id], references: [id])
+  questions_completed_num  Int                         @default(0)
+  questions_viewed_num     Int                         @default(0)
+  last_completed_date      DateTime                    @default(now())
+  coins                    Int                         @default(100)
+  started_by_user          Boolean                     @default(false)
+  available                Boolean                     @default(true)
+  questions                question[]
+}
+
+model question {
+  id                       String                      @id @default(uuid())
+  text                     String
+  emoji                    String
+  votes                    vote[]
+  polls                    poll[]
+  created_at               DateTime                    @default(now())
+}
+
+model reveal {
+  id                       String                      @id
+  user                     user                        @relation(fields: [id], references: [id])
+  remaining_hints          Int                         @default(3)
+  last_updated_date        DateTime                    @default(now())
+}
+
+model state {
+  id                       String                      @id @default(uuid())
+  name                     String
+  cities                   city[]
+  institutes               institute[]
+}
+
+model subscription {
+  id                       String                      @id
+  user                     user                        @relation(fields: [id], references: [id])
+  is_subscibed             Boolean                     @default(false)
+  expiration_date          DateTime?
+}
+
+model user {
+  id                       String                      @id @default(uuid())
+  first_name               String
+  last_name                String
+  username                 String                      @unique
+  email                    String?                     @unique
+  password                 String?
+  phone                    String                      @db.VarChar(20) @unique
+  age                      Int
+  year_of_study            year_of_study
+  institute_id             String
+  institute                institute                   @relation(fields: [institute_id], references: [id])
+  gender                   gender
+  profile_image            String?
+  tokens                   Int                         @default(0)
+  allow_contact_invites    Boolean?                    @default(false)
+  fcm_token                String?
+  reveals                  reveal?
+  poll                     poll?
+  subscription             subscription?
+  friends_added_by_user    friends[]                   @relation("friend_who_added")
+  friends_added_user       friends[]                   @relation("friend_who_accepted")
+  votes_for_user           vote[]                      @relation("created_for_user")
+  votes_by_user            vote[]                      @relation("created_by_user")
+  friend_requests_sent     friend_request[]            @relation("friend_request_by")
+  friend_requests_received friend_request[]            @relation("friend_request_to")
+  created_at               DateTime                    @default(now())
+  updated_at               DateTime?                   @updatedAt
+}
+
+model vote {
+  id                       String                      @id @default(uuid())
+  created_for_user_id      String?
+  created_for_user         user?                       @relation("created_for_user", fields: [created_for_user_id], references: [id])
+  created_by_user_id       String
+  created_by_user          user                        @relation("created_by_user", fields: [created_by_user_id], references: [id])
+  question_id              String
+  question                 question                    @relation(fields: [question_id], references: [id])
+  option1                  String
+  option2                  String
+  option3                  String
+  option4                  String
+  revealed                 Boolean?                    @default(false)
+  viewed                   Boolean?                    @default(false)
+  created_at               DateTime                    @default(now())
+}
+
+enum gender {
+  MALE
+  FEMALE
+  NON_BINARY
+}
+
+enum institute_type {
+  SCHOOL
+  COLLEGE
+}
+
+enum year_of_study {
+  GRADE_7
+  GRADE_8
+  GRADE_9
+  GRADE_10
+  GRADE_11
+  GRADE_12
+  BACHELOR_FIRST
+  BACHELOR_SECOND
+  BACHELOR_THIRD
+  BACHELOR_FOURTH
+  BACHELOR_FIFTH
+  MASTER_FIRST
+  MASTER_SECOND
+  MASTER_THIRD
+}
