@@ -10,8 +10,6 @@ An Android application for students to poll each other and see who likes them.
 
 **Technologies used**: React Native, Express.js, PostgreSQL, Prisma, Firebase, AWS
 
-<br>
-
 ## Screenshots
 
 <img src="https://github.com/sakkshm26/lit/assets/87091886/e9fe20c4-a6e5-4899-b80f-fee6d93d0630.jpg" alt="photo_6278579658438065642_y" width="300" />
