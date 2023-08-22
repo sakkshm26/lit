@@ -2,9 +2,15 @@
 
 ### Play Store link: https://play.google.com/store/apps/details?id=com.exhibitone.litapp
 
+<br>
+
 An Android application for students to poll each other and see who likes them.
 
+<br>
+
 **Technologies used**: React Native, Express.js, PostgreSQL, Prisma, Firebase, AWS
+
+<br>
 
 ## Screenshots
 
